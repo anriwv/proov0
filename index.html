@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generaator</title>
+    <style>
+        body {
+            background-color: #444444;
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            width: 128px;
+            height: 128px;
+            margin-top: 20px;
+        }
+        button {
+            font-size: 25px;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #5fa99b;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generaator</h1>
+    <button onclick="generateImage()">Generate</button>
+    <br>
+    <img id="outputImage" src="" alt="">
+    
+    <script>
+        function generateImage() {
+            fetch('/generate', {method: 'POST'})
+            .then(response => response.text())
+            .then(imageData => {
+                document.getElementById('outputImage').src = 'data:image/png;base64,' + imageData;
+            });
+        }
+    </script>
+</body>
+</html>
