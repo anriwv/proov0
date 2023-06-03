@@ -10,6 +10,12 @@ import os
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'Downloads', 'proov0'))
 model = load_model('generator_modelKaggle-17.h5')
 
+
+def save_image(image):
+    save_path = os.path.join(os.getcwd(), 'Downloads', 'generated_image.png')
+    image.save(save_path)
+    
+    
 @app.route('/')
 def home():
     return render_template('/index.html')
@@ -23,8 +29,19 @@ def generate():
     buffered = io.BytesIO()
     img.save(buffered, format='PNG')
     img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
-
+    
+    img.save("generated_image.png")
     return img_str
+
+@app.route('/save', methods=['POST'])
+def save():
+    img_data = request.form['image_data']
+    img_data = img_data.replace("data:image/png;base64,", "")
+    img_bytes = base64.b64decode(img_data)
+    img = Image.open(io.BytesIO(img_bytes))
+    save_image(img)
+    
+    return "Image saved successfully!"
 
 
 if __name__ == '__main__':
