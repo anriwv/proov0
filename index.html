@@ -1,44 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Generaator</title>
+
+    <title>GeneraatorNRG</title>
+    <link rel="shortcut icon" href="logo.ico" type="image/x-icon">
     <style>
         body {
-            background-color: #444444;
-            padding: 20px;
             text-align: center;
-            font-family: Arial, sans-serif;
+            background-color: #444444;
+            font-family: "courier", sans-serif ;
         }
-        img {
-            width: 128px;
-            height: 128px;
-            margin-top: 20px;
-        }
+
         button {
             font-size: 25px;
-            margin-top: 10px;
-            padding: 10px 20px;
             background-color: #5fa99b;
-            border: none;
             color: white;
+            padding: 10px 20px;
+            border: none;
             cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
         }
+
+        button:hover {
+            background-color: #f7b025;
+        }
+
+        #generated-image {
+            width: 128px;
+            height: 128px;
+            background-color: #ffffff;
+            margin-top: 20px;
+        }
+
     </style>
-</head>
-<body>
-    <h1>Generaator</h1>
-    <button onclick="generateImage()">Generate</button>
-    <br>
-    <img id="outputImage" src="" alt="">
-    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function generateImage() {
-            fetch('/generate', {method: 'POST'})
-            .then(response => response.text())
-            .then(imageData => {
-                document.getElementById('outputImage').src = 'data:image/png;base64,' + imageData;
+            $.ajax({
+                url: "/generate",
+                type: "POST",
+                success: function(response) {
+                    document.getElementById("generated-image").src = "data:image/png;base64," + response;
+                }
+            });
+        }
+
+        function saveImage() {
+            var image_data = document.getElementById("generated-image").src;
+            $.ajax({
+                url: "/save",
+                type: "POST",
+                data: {
+                    image_data: image_data
+                },
+                success: function(response) {
+                    alert(response);
+                }
             });
         }
     </script>
+
+</head>
+<body>
+    <h1>Generaator</h1>
+    <button onclick="generateImage()">Generate Image</button>
+    <button onclick="saveImage()">Save Image</button>
+    <br>
+    <img id="generated-image" alt="Generated Image">
 </body>
 </html>
